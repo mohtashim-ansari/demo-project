@@ -1,0 +1,51 @@
+@dsr_web_api_HostAddress = http://localhost:5254
+
+GET {{dsr_web_api_HostAddress}}/usersinfo
+Accept: application/json
+
+###
+# ===================== GET ALL USERS =====================
+GET http://localhost:5254/usersinfo
+###
+
+# ===================== GET USER BY ID =====================
+GET http://localhost:5254/usersinfo/1010
+###
+
+# ===================== CREATE USER (POST) =====================
+POST http://localhost:5254/usersinfo
+Content-Type: application/json
+
+{
+    "firtName": "tasnif",
+    "lastName": "ansari",
+    "email": "tasnif@example.com",
+    "mobile": "9876543210",
+    "userName": "tasnif",
+    "passwordHash": "MyPass@123",
+    "createdBy": 1
+}
+###
+
+# ===================== UPDATE USER (PUT) =====================
+PUT http://localhost:5254/usersinfo/1010
+Content-Type: application/json
+
+{
+    "id": 1009,
+    "firtName": "Mohammad Mohtashim",
+    "lastName": "Ansari",
+    "email": "mohtashim535@example.com",
+    "mobile": "9075903590",
+    "PasswordHash": "admin@123",
+    "userName": "mohtashim",
+    "isActive": true,
+    "lastLoginDateTime": "2025-01-01T10:00:00",
+    "updatedBy": 1
+}
+
+###
+
+# ===================== DELETE USER (SOFT DELETE) =====================
+DELETE http://localhost:5254/usersinfo/1008
+###
