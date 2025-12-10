@@ -40,7 +40,7 @@ app.UseHttpsRedirection();
 
 // Map API Endpoint
 app.MapUsersInfoEndpoints();
-app.MapAttandanceEndpoints();
+app.MapAttandanceInfoEndpoints();
 
 app.Run();
 

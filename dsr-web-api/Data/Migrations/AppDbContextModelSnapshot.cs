@@ -62,6 +62,53 @@ namespace dsr_web_api.Data.Migrations
                     b.ToTable("AttandanceInfos");
                 });
 
+            modelBuilder.Entity("dsr_web_api.Models.UserRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Super Admin",
+                            IsDefault = true,
+                            Name = "SuperAdmin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Admin",
+                            IsDefault = false,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Employee",
+                            IsDefault = false,
+                            Name = "Employee"
+                        });
+                });
+
             modelBuilder.Entity("dsr_web_api.Models.UsersInfo", b =>
                 {
                     b.Property<int>("Id")
@@ -117,6 +164,9 @@ namespace dsr_web_api.Data.Migrations
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserRoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

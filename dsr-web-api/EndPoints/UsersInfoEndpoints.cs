@@ -23,7 +23,7 @@ public static class UsersInfoEndpoints
         // GET /usersinfo/{id}
         group.MapGet("/{id}", async (int id, AppDbContext dbContext) =>
         {
-            var users = await dbContext.UsersInfos.FindAsync(id);
+            var users = await dbContext.UsersInfos.Where(x=>x.Id==id && !x.IsDeleted).FirstOrDefaultAsync();
 
             if (users is null)
                 return Results.NotFound("User not found");
@@ -51,7 +51,7 @@ public static class UsersInfoEndpoints
            if (existingUser is null)
                return Results.NotFound("User not found");
 
-           dbContext.Entry(existingUser).CurrentValues.SetValues(dto.ToEntity(id));
+           dbContext.Entry(existingUser).CurrentValues.SetValues(dto.ToEntity(id, existingUser));
 
            await dbContext.SaveChangesAsync();
            return Results.NoContent();

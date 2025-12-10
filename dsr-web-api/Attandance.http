@@ -1,0 +1,56 @@
+@host = http://localhost:5254
+@apikey = f3dcfyfew298tlhsyu3qwspblor60lht
+
+# GET ALL ATTENDANCE
+GET {{host}}/attandanceinfo
+Accept: application/json
+x-api-key: {{apikey}}
+
+###
+
+# GET ATTENDANCE BY ID
+GET {{host}}/attandanceinfo/11
+Accept: application/json
+x-api-key: {{apikey}}
+
+###
+
+# CREATE ATTENDANCE (POST) 
+POST {{host}}/attandanceinfo
+Content-Type: application/json
+x-api-key: {{apikey}}
+
+{
+    "userId": 1009,
+    "attandanceDate": "2025-11-09T09:30:00",
+    "isPresent": true,
+    "isDSRSent": false,
+    "createdBy": 2,
+    "createdOn": "2025-12-10T00:00:00"
+}
+
+###
+
+# UPDATE ATTENDANCE (PUT) 
+PUT {{host}}/attandanceinfo/11
+Content-Type: application/json
+x-api-key: {{apikey}}
+
+{
+    "id": 11,
+    "userId": 1011,
+    "attandanceDate": "2025-11-10T09:30:00",
+    "isPresent": false,
+    "isDSRSent": true,
+    "isDeleted": false,
+    "updatedBy": 4,
+    "updatedOn": "2025-12-10T00:00:00"
+}
+
+###
+
+# DELETE ATTENDANCE (SOFT DELETE) 
+DELETE {{host}}/attandanceinfo/11
+x-api-key: {{apikey}}
+
+###

@@ -1,20 +1,26 @@
 @dsr_web_api_HostAddress = http://localhost:5254
+@apikey = f3dcfyfew298tlhsyu3qwspblor60lht
 
 GET {{dsr_web_api_HostAddress}}/usersinfo
 Accept: application/json
+x-api-key: {{apikey}}
+
 
 ###
 # ===================== GET ALL USERS =====================
 GET http://localhost:5254/usersinfo
+x-api-key: {{apikey}}
 ###
 
 # ===================== GET USER BY ID =====================
-GET http://localhost:5254/usersinfo/1010
+GET http://localhost:5254/usersinfo/2
+x-api-key: {{apikey}}
 ###
 
 # ===================== CREATE USER (POST) =====================
 POST http://localhost:5254/usersinfo
 Content-Type: application/json
+x-api-key: {{apikey}}
 
 {
     "firtName": "tasnif",
@@ -28,11 +34,12 @@ Content-Type: application/json
 ###
 
 # ===================== UPDATE USER (PUT) =====================
-PUT http://localhost:5254/usersinfo/1010
+PUT http://localhost:5254/usersinfo/2
 Content-Type: application/json
+x-api-key: {{apikey}}
 
 {
-    "id": 1009,
+    "id": 2,
     "firtName": "Mohammad Mohtashim",
     "lastName": "Ansari",
     "email": "mohtashim535@example.com",
@@ -47,5 +54,6 @@ Content-Type: application/json
 ###
 
 # ===================== DELETE USER (SOFT DELETE) =====================
-DELETE http://localhost:5254/usersinfo/1008
+DELETE http://localhost:5254/usersinfo/2
+x-api-key: {{apikey}}
 ###

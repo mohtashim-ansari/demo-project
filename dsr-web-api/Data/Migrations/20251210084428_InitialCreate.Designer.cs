@@ -12,8 +12,8 @@ using dsr_web_api.Data;
 namespace dsr_web_api.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251210060634_RemoveId")]
-    partial class RemoveId
+    [Migration("20251210084428_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,6 +63,53 @@ namespace dsr_web_api.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AttandanceInfos");
+                });
+
+            modelBuilder.Entity("dsr_web_api.Models.UserRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Super Admin",
+                            IsDefault = true,
+                            Name = "SuperAdmin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Admin",
+                            IsDefault = false,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Employee",
+                            IsDefault = false,
+                            Name = "Employee"
+                        });
                 });
 
             modelBuilder.Entity("dsr_web_api.Models.UsersInfo", b =>
@@ -120,6 +167,9 @@ namespace dsr_web_api.Data.Migrations
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserRoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

@@ -9,6 +9,7 @@ public record class UsersInfoDetailsDto
     [Required] string? LastName,
     [Required] string? Email,
     [Required] string? Mobile,
+    [Required] int UserRoleId,
     [Required] string? UserName,
     [Required] string? PasswordHash,
     bool IsActive,

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace dsr_web_api.Data.Migrations
 {
     /// <inheritdoc />
@@ -33,6 +35,21 @@ namespace dsr_web_api.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDefault = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UsersInfos",
                 columns: table => new
                 {
@@ -42,6 +59,7 @@ namespace dsr_web_api.Data.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Mobile = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserRoleId = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
@@ -57,6 +75,16 @@ namespace dsr_web_api.Data.Migrations
                 {
                     table.PrimaryKey("PK_UsersInfos", x => x.Id);
                 });
+
+            migrationBuilder.InsertData(
+                table: "UserRoles",
+                columns: new[] { "Id", "Description", "IsDefault", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Super Admin", true, "SuperAdmin" },
+                    { 2, "Admin", false, "Admin" },
+                    { 3, "Employee", false, "Employee" }
+                });
         }
 
         /// <inheritdoc />
@@ -64,6 +92,9 @@ namespace dsr_web_api.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "AttandanceInfos");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "UsersInfos");

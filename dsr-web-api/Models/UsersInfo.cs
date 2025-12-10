@@ -20,6 +20,8 @@ public class UsersInfo : BaseModel
     [Required]
     public required string Mobile { get; set; }
     [Required]
+    public required int UserRoleId { get; set; }
+    [Required]
     public required string UserName { get; set; }
     [Required]
     public required string PasswordHash { get; set; }
