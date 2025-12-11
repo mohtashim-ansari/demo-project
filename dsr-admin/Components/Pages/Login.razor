@@ -1,0 +1,49 @@
+﻿@page "/"
+@using dsr_admin.Clients
+@layout Layout.EmptyLayout
+@rendermode InteractiveServer
+@inject AccountClient client
+@inject NavigationManager Nav
+<PageTitle>Login</PageTitle>
+
+<div class="d-flex justify-content-center align-items-center" style="height:100vh">
+    <div class="border p-3" style="width:300px">
+        <h3 class="text-center">Login</h3>
+
+        <div class="mb-2">
+            <label>Username:</label><br />
+            <input @bind="Username" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label>Password:</label><br />
+            <input type="password" @bind="Password" class="form-control" />
+        </div>
+
+        <button class="btn btn-primary w-100" @onclick="HandleLogin">Login</button>
+
+        @if (!string.IsNullOrWhiteSpace(Message))
+        {
+            <p class="text-danger mt-2">@Message</p>
+        }
+    </div>
+</div>
+
+@code {
+    private string Username { get; set; } = "";
+    private string Password { get; set; } = "";
+    private string Message { get; set; } = "";
+
+    private async Task HandleLogin()
+    {
+        try
+        {
+            await client.LoginAsync(Username, Password);
+            Nav.NavigateTo("/home");
+        }
+        catch (Exception ex)
+        {
+            Message = ex.Message;
+        }
+    }
+}
