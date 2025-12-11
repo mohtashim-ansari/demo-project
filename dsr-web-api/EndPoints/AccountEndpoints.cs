@@ -13,7 +13,10 @@ public static class AccountEndpoints
         // Main route group: /account
         var group = app.MapGroup("account");
 
-        // GET login /account
+        // -------------------------------
+        // LOGIN APIS
+        // -------------------------------
+        // POST login /account/login
         group.MapPost("/login", async (LoginRequest request, AppDbContext dbContext, PasswordService passwordService) =>
         {
             var user = await dbContext.UsersInfos

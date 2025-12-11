@@ -15,6 +15,9 @@ public static class UsersInfoEndpoints
         // Main route group: /usersinfo
         var group = app.MapGroup("usersinfo");
 
+        // -------------------------------
+        // DEFAULT CRUD APIS
+        // -------------------------------
         // GET /usersinfo
         group.MapGet("/", async (AppDbContext db) =>
             await db.UsersInfos
@@ -79,6 +82,10 @@ public static class UsersInfoEndpoints
             await dbContext.SaveChangesAsync();
             return Results.NoContent();
         });
+
+        // -------------------------------
+        // CUSTOM APIS
+        // -------------------------------
 
         return group;
     }

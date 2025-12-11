@@ -13,6 +13,9 @@ public static class AttandanceInfoEndpoints
         // Main route group: /attandanceinfo
         var group = app.MapGroup("attandanceinfo");
 
+        // -------------------------------
+        // DEFAULT CRUD APIS
+        // -------------------------------
         // GET ALL /attandanceinfo
         group.MapGet("/", async (AppDbContext db) =>
             await db.AttandanceInfos
@@ -72,6 +75,10 @@ public static class AttandanceInfoEndpoints
             return Results.NoContent();
         });
 
+        // -------------------------------
+        // CUSTOM APIS
+        // -------------------------------
+        // POST /attandanceinfo/todays/{id}
         group.MapGet("todays/{id}", async (int id, AppDbContext dbContext) =>
         {
             var todaysAttandance = await dbContext.AttandanceInfos.Where(x => x.UserId == id && x.AttandanceDate.Date == DateTime.Now.Date && !x.IsDeleted).FirstOrDefaultAsync();
