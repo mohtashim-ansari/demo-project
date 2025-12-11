@@ -72,6 +72,16 @@ public static class AttandanceInfoEndpoints
             return Results.NoContent();
         });
 
+        group.MapGet("todays/{id}", async (int id, AppDbContext dbContext) =>
+        {
+            var todaysAttandance = await dbContext.AttandanceInfos.Where(x => x.UserId == id && x.AttandanceDate.Date == DateTime.Now.Date && !x.IsDeleted).FirstOrDefaultAsync();
+
+            if (todaysAttandance is null)
+                return Results.NotFound("Attendance record not found");
+
+            return Results.Ok(todaysAttandance);
+        });
+
         return group;
     }
 }

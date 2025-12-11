@@ -28,8 +28,9 @@ x-api-key: {{apikey}}
     "email": "tasnif@example.com",
     "mobile": "9876543210",
     "userName": "tasnif",
-    "passwordHash": "MyPass@123",
-    "createdBy": 1
+    "passwordHash": "Pass@123",
+    "createdBy": 1,
+    "createdOn": "2025-12-10T14:28:02.4127919"
 }
 ###
 
@@ -45,10 +46,11 @@ x-api-key: {{apikey}}
     "email": "mohtashim535@example.com",
     "mobile": "9075903590",
     "PasswordHash": "admin@123",
-    "userName": "mohtashim",
+    "userName": "admin",
     "isActive": true,
     "lastLoginDateTime": "2025-01-01T10:00:00",
-    "updatedBy": 1
+    "updatedBy": 1,
+    "updatedOn": "2025-12-10T14:28:02.4127919"
 }
 
 ###

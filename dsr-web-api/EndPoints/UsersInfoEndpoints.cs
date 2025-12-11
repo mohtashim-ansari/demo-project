@@ -1,8 +1,9 @@
 using dsr_web_api.Data;
 using dsr_web_api.Dtos;
-using dsr_web_api.Helpers;
 using dsr_web_api.Mapping;
 using dsr_web_api.Models;
+using dsr_web_api.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace dsr_web_api.EndPoints;
@@ -24,7 +25,7 @@ public static class UsersInfoEndpoints
         // GET /usersinfo/{id}
         group.MapGet("/{id}", async (int id, AppDbContext dbContext) =>
         {
-            var users = await dbContext.UsersInfos.Where(x=>x.Id==id && !x.IsDeleted).FirstOrDefaultAsync();
+            var users = await dbContext.UsersInfos.Where(x => x.Id == id && !x.IsDeleted).FirstOrDefaultAsync();
 
             if (users is null)
                 return Results.NotFound("User not found");
@@ -33,13 +34,12 @@ public static class UsersInfoEndpoints
         });
 
         // POST /usersinfo
-        group.MapPost("/", async (CreateUsersInfoDto dto, AppDbContext db) =>
+        group.MapPost("/", async (CreateUsersInfoDto dto, AppDbContext db, PasswordService passwordService) =>
         {
             // Create new user entity from DTO
             UsersInfo user = dto.ToEntity();
 
-            var helper = new PasswordHelper();
-            user.PasswordHash = helper.HashPassword(user.PasswordHash);
+            user.PasswordHash = passwordService.Hash(user.PasswordHash);
 
             db.UsersInfos.Add(user);
             await db.SaveChangesAsync();
@@ -48,15 +48,14 @@ public static class UsersInfoEndpoints
         });
 
         // PUT /usersinfo/{id}
-        group.MapPut("/{id}", async (int id, UpdateUsersInfoDto dto, AppDbContext dbContext) =>
+        group.MapPut("/{id}", async (int id, UpdateUsersInfoDto dto, AppDbContext dbContext, PasswordService passwordService) =>
        {
            var existingUser = await dbContext.UsersInfos.FindAsync(id);
 
            if (existingUser is null)
                return Results.NotFound("User not found");
 
-           var helper = new PasswordHelper();
-           existingUser.PasswordHash = helper.HashPassword(dto.PasswordHash!);
+           existingUser.PasswordHash = passwordService.Hash(dto.PasswordHash!);
 
            dbContext.Entry(existingUser).CurrentValues.SetValues(dto.ToEntity(id, existingUser));
 

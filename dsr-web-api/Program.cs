@@ -1,6 +1,9 @@
 using dsr_web_api.Data;
 using dsr_web_api.EndPoints;
 using dsr_web_api.Middlewares;
+using dsr_web_api.Models;
+using dsr_web_api.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +22,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 // Register DbContext with SQL Server
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
+
+// Add PasswordHasher
+builder.Services.AddSingleton<PasswordService>();
 
 var app = builder.Build();
 
@@ -41,6 +47,7 @@ app.UseHttpsRedirection();
 // Map API Endpoint
 app.MapUsersInfoEndpoints();
 app.MapAttandanceInfoEndpoints();
+app.MapAccountsEndpoints();
 
 app.Run();
 
