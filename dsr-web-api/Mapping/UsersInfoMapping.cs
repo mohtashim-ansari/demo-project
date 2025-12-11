@@ -40,7 +40,7 @@ public static class UsersInfoMapping
             Mobile = usersDto.Mobile!,
             UserRoleId = usersDto.UserRoleId,
             UserName = usersDto.UserName!,
-            PasswordHash = usersDto.PasswordHash!,
+            PasswordHash = existingUser.PasswordHash!,
             CreatedBy = existingUser.CreatedBy,
             CreatedOn = existingUser.CreatedOn,
             IsActive = usersDto.IsActive,

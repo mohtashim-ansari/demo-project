@@ -1,5 +1,6 @@
 using dsr_web_api.Data;
 using dsr_web_api.Dtos;
+using dsr_web_api.Helpers;
 using dsr_web_api.Mapping;
 using dsr_web_api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,9 @@ public static class UsersInfoEndpoints
             // Create new user entity from DTO
             UsersInfo user = dto.ToEntity();
 
+            var helper = new PasswordHelper();
+            user.PasswordHash = helper.HashPassword(user.PasswordHash);
+
             db.UsersInfos.Add(user);
             await db.SaveChangesAsync();
 
@@ -50,6 +54,9 @@ public static class UsersInfoEndpoints
 
            if (existingUser is null)
                return Results.NotFound("User not found");
+
+           var helper = new PasswordHelper();
+           existingUser.PasswordHash = helper.HashPassword(dto.PasswordHash!);
 
            dbContext.Entry(existingUser).CurrentValues.SetValues(dto.ToEntity(id, existingUser));
 
