@@ -86,7 +86,26 @@ public static class UsersInfoEndpoints
         // -------------------------------
         // CUSTOM APIS
         // -------------------------------
+        // GET SINGLE USER BY ID WITH TODAY'S ATTENDANCE
+        group.MapGet("user/{id}", async (int id, AppDbContext dbContext) =>
+        {
+            var user = await dbContext.UsersInfos
+            .Where(u => u.Id == id && !u.IsDeleted)
+            .Select(u => new
+            {
+                u.Id,
+                u.FirtName,
+                u.LastName,
+                u.Email,
+                u.Mobile
+            })
+            .FirstOrDefaultAsync();
 
+            if (user == null)
+                return Results.NotFound("User not found");
+
+            return Results.Ok(user);
+        });
         return group;
     }
 }

@@ -12,6 +12,7 @@
   <ItemGroup>
     <Folder Include="Clients\" />
     <Folder Include="Dtos\" />
+    <Folder Include="Helpers\" />
     <Folder Include="Models\" />
   </ItemGroup>
 

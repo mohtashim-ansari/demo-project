@@ -23,11 +23,11 @@ Content-Type: application/json
 x-api-key: {{apikey}}
 
 {
-    "firtName": "tasnif",
-    "lastName": "ansari",
-    "email": "tasnif@example.com",
+    "firtName": "Shadab",
+    "lastName": "Ansari",
+    "email": "Shadab@example.com",
     "mobile": "9876543210",
-    "userName": "tasnif",
+    "userName": "Shadab",
     "passwordHash": "Pass@123",
     "createdBy": 1,
     "createdOn": "2025-12-10T14:28:02.4127919"
@@ -41,7 +41,7 @@ x-api-key: {{apikey}}
 
 {
     "id": 2,
-    "firtName": "Mohammad Mohtashim",
+    "firtName": "Mohammad ",
     "lastName": "Ansari",
     "email": "mohtashim535@example.com",
     "mobile": "9075903590",
@@ -56,6 +56,6 @@ x-api-key: {{apikey}}
 ###
 
 # ===================== DELETE USER (SOFT DELETE) =====================
-DELETE http://localhost:5254/usersinfo/2
+DELETE http://localhost:5254/usersinfo/5
 x-api-key: {{apikey}}
 ###

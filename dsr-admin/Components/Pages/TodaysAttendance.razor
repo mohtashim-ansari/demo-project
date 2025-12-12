@@ -1,0 +1,61 @@
+﻿@page "/today"
+@inject TodaysClient todaysClient
+@rendermode InteractiveServer
+
+<PageTitle>Today's Attendance</PageTitle>
+
+<h3 class="mb-3">Today's Attendance</h3>
+
+@if (loading)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>FirsName</th>
+                <th>LastName</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Attandance Date</th>
+                <th>Present</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in users)
+            {
+                <tr>
+                    <td>@(index++)</td>
+                    <td>@u.FirtName</td>
+                    <td>@u.LastName</td>
+                    <td>@u.Email</td>
+                    <td>@u.Mobile</td>
+                    <th>@u.AttandanceDate.DateToString()</th>
+                    <td>
+                        @if (u.IsPresent)
+                        {
+                            <span class="badge text-bg-success">Present</span>
+                        }else{
+                            <span class="badge text-bg-danger">Absent</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<TodaysAttendanceResponse> users = new();
+    private bool loading = true;
+    private int index = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await todaysClient.GetTodaysAttendanceAsync();
+        loading = false;
+    }
+}

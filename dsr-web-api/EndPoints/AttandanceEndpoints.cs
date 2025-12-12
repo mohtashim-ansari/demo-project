@@ -4,29 +4,26 @@ using dsr_web_api.Mapping;
 using dsr_web_api.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace dsr_web_api.EndPoints;
-
 public static class AttandanceInfoEndpoints
 {
     public static RouteGroupBuilder MapAttandanceInfoEndpoints(this WebApplication app)
     {
-        // Main route group: /attandanceinfo
         var group = app.MapGroup("attandanceinfo");
 
         // -------------------------------
         // DEFAULT CRUD APIS
         // -------------------------------
-        // GET ALL /attandanceinfo
         group.MapGet("/", async (AppDbContext db) =>
             await db.AttandanceInfos
                 .Where(x => !x.IsDeleted)
                 .ToListAsync()
         );
 
-        // GET SINGLE /attandanceinfo/{id}
         group.MapGet("/{id}", async (int id, AppDbContext dbContext) =>
         {
-            var attandance = await dbContext.AttandanceInfos.Where(x => x.Id == id && !x.IsDeleted).FirstOrDefaultAsync();
+            var attandance = await dbContext.AttandanceInfos
+                .Where(x => x.Id == id && !x.IsDeleted)
+                .FirstOrDefaultAsync();
 
             if (attandance is null)
                 return Results.NotFound("Attendance record not found");
@@ -34,7 +31,6 @@ public static class AttandanceInfoEndpoints
             return Results.Ok(attandance);
         });
 
-        // POST /attandanceinfo
         group.MapPost("/", async (CreateAttandanceDto dto, AppDbContext db) =>
         {
             AttandanceInfo attandance = dto.ToEntity();
@@ -45,7 +41,6 @@ public static class AttandanceInfoEndpoints
             return Results.Created($"/attandanceinfo/{attandance.Id}", attandance);
         });
 
-        // PUT /attandanceinfo/{id}
         group.MapPut("/{id}", async (int id, UpdateAttandaceDto dto, AppDbContext dbContext) =>
         {
             var existing = await dbContext.AttandanceInfos.FindAsync(id);
@@ -59,7 +54,6 @@ public static class AttandanceInfoEndpoints
             return Results.NoContent();
         });
 
-        // SOFT DELETE /attandanceinfo/{id}
         group.MapDelete("/{id}", async (int id, AppDbContext dbContext) =>
         {
             var attandance = await dbContext.AttandanceInfos.FindAsync(id);
@@ -68,7 +62,6 @@ public static class AttandanceInfoEndpoints
                 return Results.NotFound("Attendance record not found");
 
             attandance.IsDeleted = true;
-            //attandance.UpdatedBy = 0;
             attandance.UpdatedOn = DateTime.Now;
 
             await dbContext.SaveChangesAsync();
@@ -78,7 +71,7 @@ public static class AttandanceInfoEndpoints
         // -------------------------------
         // CUSTOM APIS
         // -------------------------------
-        // POST /attandanceinfo/todays/{id}
+        // GET /attandanceinfo/todays/{id}
         group.MapGet("todays/{id}", async (int id, AppDbContext dbContext) =>
         {
             var todaysAttandance = await dbContext.AttandanceInfos.Where(x => x.UserId == id && x.AttandanceDate.Date == DateTime.Now.Date && !x.IsDeleted).FirstOrDefaultAsync();
@@ -88,6 +81,32 @@ public static class AttandanceInfoEndpoints
 
             return Results.Ok(todaysAttandance);
         });
+
+        // GET ALL USERS WITH TODAY'S ATTENDANCE
+        group.MapGet("todays/all", async (AppDbContext dbContext) =>
+            {
+                var result = await dbContext.UsersInfos
+                .Where(u => !u.IsDeleted)
+                .Join(
+                    dbContext.AttandanceInfos,
+                    u => u.Id,
+                    a => a.UserId,
+                    (u, a) => new
+                    {
+                        u.Id,
+                        u.FirtName,
+                        u.LastName,
+                        u.Email,
+                        u.Mobile,
+                        a.AttandanceDate,
+                        a.IsPresent
+                    }
+                )
+                .Where(x => x.AttandanceDate.Date == DateTime.Now.Date)
+                .ToListAsync();
+
+                return Results.Ok(result);
+            });
 
         return group;
     }
