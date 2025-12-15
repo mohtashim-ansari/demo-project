@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace dsr_web_api.Models;
 
-public class UsersInfo : BaseModel
+public  class UsersInfo : BaseModel
 {
     [Key]
     [Required]

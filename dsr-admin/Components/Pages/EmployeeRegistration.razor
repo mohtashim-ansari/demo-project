@@ -1,0 +1,92 @@
+﻿@page "/registration"
+@inject RegisterUser registerUser
+@inherits BaseSecureComponent
+@inject NavigationManager Nav
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+
+<PageTitle>Employee Registration</PageTitle>
+
+<h3 class="mb-3">Employee Registration</h3>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+<div class="border p-3 rounded" style="max-width:420px;">
+    <EditForm Model="model" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-2">
+            <label>First Name</label>
+            <InputText class="form-control" @bind-Value="model.FirtName" />
+        </div>
+
+        <div class="mb-2">
+            <label>Last Name</label>
+            <InputText class="form-control" @bind-Value="model.LastName" />
+        </div>
+
+        <div class="mb-2">
+            <label>Email</label>
+            <InputText class="form-control" @bind-Value="model.Email" />
+        </div>
+
+        <div class="mb-2">
+            <label>Mobile</label>
+            <InputText class="form-control" @bind-Value="model.Mobile" />
+        </div>
+
+        <div class="mb-2">
+            <label>Username</label>
+            <InputText class="form-control" @bind-Value="model.UserName" />
+        </div>
+
+        <div class="mb-2">
+            <label>Password</label>
+            <InputText type="password" class="form-control" @bind-Value="model.PasswordHash" />
+        </div>
+
+        <button class="btn btn-primary w-100 mt-3" type="submit">
+            Register Employee
+        </button>
+    </EditForm>
+</div>
+
+@code {
+    private CreateUsersInfoDto model = new();
+    private string? successMessage;
+    private string? errorMessage;
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            // REQUIRED BY API
+            model.CreatedBy = 1; // admin
+            model.CreatedOn = DateTime.Now; // now
+
+            await registerUser.RegisterUserAsync(model);
+
+            successMessage = "Employee registered successfully!";
+            errorMessage = null;
+
+            // optional redirect
+            Nav.NavigateTo("/", forceLoad: true);
+
+            model = new CreateUsersInfoDto();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+            successMessage = null;
+        }
+    }
+}

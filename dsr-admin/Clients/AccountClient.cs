@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace dsr_admin.Clients;
 
-public class AccountClient(HttpClient httpClient)
+public class AccountClient(HttpClient httpClient, UserSession userSession)
 {
     public async Task<string> LoginAsync(string userName, string password)
     {
@@ -47,8 +47,19 @@ public class AccountClient(HttpClient httpClient)
                     throw new Exception($"Attendance failed.");
                 }
             }
+            // ✅ SAFE: store user info here
+            userSession.UserId = result!.User!.Id;
+            userSession.UserName = result!.User!.UserName;
+            userSession.UserRoleId = result!.User!.UserRoleId;
+
             return result!.Message;
         }
     }
 
+    public void Logout()
+    {
+        userSession.UserId = 0;
+        userSession.UserName = null;
+        userSession.UserRoleId = 0;
+    }
 }

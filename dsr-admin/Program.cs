@@ -1,32 +1,44 @@
 using dsr_admin.Clients;
 using dsr_admin.Components;
+using dsr_admin.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
+// Razor Components
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// ✔️ Bring config **before** using it
 var config = builder.Configuration;
 
+builder.Services.AddScoped<UserSession>();
+
 // ----------------------------------------
-// Register TodaysClient
+// ✔ Register TodaysClient
 // ----------------------------------------
 builder.Services.AddHttpClient<TodaysClient>(client =>
 {
     client.BaseAddress = new Uri(config["DSRApiUrl"]!);
-    client.DefaultRequestHeaders.Add("X-Api-Key", config["ApiKey"]);
+    client.DefaultRequestHeaders.Add("X-Api-Key", config["ApiKey"]!);
 });
 
 // ----------------------------------------
-// Register AccountClient
+// ✔ Register AccountClient
 // ----------------------------------------
 builder.Services.AddHttpClient<AccountClient>(client =>
 {
     client.BaseAddress = new Uri(config["DSRApiUrl"]!);
-    client.DefaultRequestHeaders.Add("X-Api-Key", config["ApiKey"]);
+    client.DefaultRequestHeaders.Add("X-Api-Key", config["ApiKey"]!);
 });
+
+// ----------------------------------------
+// ✔ Register RegisterUser
+// ----------------------------------------
+builder.Services.AddHttpClient<RegisterUser>(client =>
+{
+    client.BaseAddress = new Uri(config["DSRApiUrl"]!);
+    client.DefaultRequestHeaders.Add("X-Api-Key", config["ApiKey"]!);
+});
+
 
 // ----------------------------------------
 // Build app
