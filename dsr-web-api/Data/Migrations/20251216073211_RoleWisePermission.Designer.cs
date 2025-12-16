@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dsr_web_api.Data;
 
@@ -11,9 +12,11 @@ using dsr_web_api.Data;
 namespace dsr_web_api.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251216073211_RoleWisePermission")]
+    partial class RoleWisePermission
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,13 +143,13 @@ namespace dsr_web_api.Data.Migrations
                         {
                             Id = 10,
                             PageName = "Home",
-                            RoleId = 3
+                            RoleId = 2
                         },
                         new
                         {
                             Id = 11,
                             PageName = "Attendance",
-                            RoleId = 3
+                            RoleId = 2
                         });
                 });
 

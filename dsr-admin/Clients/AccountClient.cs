@@ -62,4 +62,11 @@ public class AccountClient(HttpClient httpClient, UserSession userSession)
         userSession.UserName = null;
         userSession.UserRoleId = 0;
     }
+
+    public async Task<List<RolePermissionResponse>> GetPermissions(int roleId)
+    {
+        return await httpClient.GetFromJsonAsync<List<RolePermissionResponse>>(
+            $"role/permission/{roleId}"
+        ) ?? new();
+    }
 }

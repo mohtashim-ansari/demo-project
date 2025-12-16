@@ -24,9 +24,20 @@ public class AppDbContext : DbContext
         );
 
         modelBuilder.Entity<RolePermission>().HasData(
-            new RolePermission { Id = 1, RoleId = 1, PageName = "" },
-            new RolePermission { Id = 2, RoleId = 1, PageName = "" },
-            new RolePermission { Id = 3, RoleId = 1, PageName = "" }
+            // Super Admin
+            new RolePermission { Id = 1, RoleId = 1, PageName = "Home" },
+            new RolePermission { Id = 2, RoleId = 1, PageName = "Attendance" },
+            new RolePermission { Id = 3, RoleId = 1, PageName = "Search" },
+            new RolePermission { Id = 4, RoleId = 1, PageName = "DSR" },
+            new RolePermission { Id = 5, RoleId = 1, PageName = "Registration" },
+            // Admin
+            new RolePermission { Id = 6, RoleId = 2, PageName = "Home" },
+            new RolePermission { Id = 7, RoleId = 2, PageName = "Attendance" },
+            new RolePermission { Id = 8, RoleId = 2, PageName = "Search" },
+            new RolePermission { Id = 9, RoleId = 2, PageName = "DSR" },
+            // Employee
+            new RolePermission { Id = 10, RoleId = 3, PageName = "Home" },
+            new RolePermission { Id = 11, RoleId = 3, PageName = "Attendance" }
         );
     }
 }
