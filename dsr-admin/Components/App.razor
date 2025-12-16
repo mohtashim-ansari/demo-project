@@ -5,11 +5,22 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
+
     <ResourcePreloader />
+
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]" />
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- App Styles -->
     <link rel="stylesheet" href="@Assets["app.css"]" />
     <link rel="stylesheet" href="@Assets["dsr-admin.styles.css"]" />
+
     <ImportMap />
+
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="Assets/business.png" />
 
     <HeadOutlet />
@@ -18,6 +29,7 @@
 <body>
     <Routes />
     <ReconnectModal />
+
     <script src="@Assets["_framework/blazor.web.js"]"></script>
 </body>
 

@@ -86,7 +86,7 @@ public static class UsersInfoEndpoints
         // -------------------------------
         // CUSTOM APIS
         // -------------------------------
-        // GET SINGLE USER BY ID WITH TODAY'S ATTENDANCE
+        // GET SINGLE USER BY ID
         group.MapGet("user/{id}", async (int id, AppDbContext dbContext) =>
         {
             var user = await dbContext.UsersInfos
@@ -106,6 +106,7 @@ public static class UsersInfoEndpoints
 
             return Results.Ok(user);
         });
+        
         return group;
     }
 }

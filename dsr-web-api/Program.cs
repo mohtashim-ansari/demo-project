@@ -48,6 +48,7 @@ app.UseHttpsRedirection();
 app.MapUsersInfoEndpoints();
 app.MapAttandanceInfoEndpoints();
 app.MapAccountsEndpoints();
+app.MapRoleEndpoints();
 
 app.Run();
 

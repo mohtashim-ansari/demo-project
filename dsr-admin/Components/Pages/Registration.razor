@@ -1,9 +1,8 @@
 ﻿@page "/registration"
+@using dsr_admin.Dtos
 @inject RegisterUser registerUser
 @inherits BaseSecureComponent
-@inject NavigationManager Nav
-@rendermode InteractiveServer
-@inject IJSRuntime JS
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Employee Registration</PageTitle>
 
@@ -45,6 +44,18 @@
         </div>
 
         <div class="mb-2">
+            <label>Role</label>
+            <InputSelect class="form-select" @bind-Value="model.UserRoleId">
+                <option value="">Select</option>
+
+                @foreach (var role in roleList)
+                {
+                    <option value="@role.Id">@role.Description</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="mb-2">
             <label>Username</label>
             <InputText class="form-control" @bind-Value="model.UserName" />
         </div>
@@ -52,6 +63,11 @@
         <div class="mb-2">
             <label>Password</label>
             <InputText type="password" class="form-control" @bind-Value="model.PasswordHash" />
+        </div>
+
+        <div class="mb-2">
+            <label>Confirm Password</label>
+            <InputText type="password" class="form-control" @bind-Value="model.ConfirmPassword" />
         </div>
 
         <button class="btn btn-primary w-100 mt-3" type="submit">
@@ -62,8 +78,14 @@
 
 @code {
     private CreateUsersInfoDto model = new();
+    private List<RoleResponse> roleList = new();
     private string? successMessage;
     private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        roleList = await registerUser.GetAllRolesAsync();
+    }
 
     private async Task HandleSubmit()
     {
