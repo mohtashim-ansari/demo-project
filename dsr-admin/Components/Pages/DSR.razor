@@ -1,8 +1,128 @@
 ﻿@page "/dsr"
 @inherits BaseSecureComponent
+@inject AttendanceClient attendanceClient
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
-<h3>DSR</h3>
+<h3>DSR Reminder</h3>
+
+<SearchFilters Attendances="@allAttendance" @bind-SearchName="@SearchName" @bind-FromDate="FromDate"
+    @bind-ToDate="ToDate" OnSearch="SearchAttendanceByDateAsync">
+</SearchFilters>
+
+@if (attendanceList != null && attendanceList.Any())
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Attendance Date</th>
+                <th>Present</th>
+                <th>DSR Reminder</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in attendanceList)
+            {
+                <tr>
+                    <td>@(index++)</td>
+                    <td>@u.FirstName</td>
+                    <td>@u.LastName</td>
+                    <td>@u.Email</td>
+                    <td>@u.Mobile</td>
+                    <td>@u.AttandanceDate.DateToString()</td>
+                    <td>
+                        @if (u.IsPresent)
+                        {
+                            <span class="badge text-bg-success">Present</span>
+                        }
+                        else
+                        {
+                            <span class="badge text-bg-danger">Absent</span>
+                        }
+                    </td>
+                    <td>
+                        @if (u.IsDSRSent)
+                        {
+                            <span class="badge text-bg-success">Sent</span>
+                        }
+                        else
+                        {
+                            <span class="badge text-bg-danger">Not Sent</span>
+                        }
+                    </td>
+                    <td>
+                        @if (u.IsDSRSent)
+                        {
+                            <div class="d-flex">
+                                <button class="btn btn-secondary" disabled>Sent</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="d-flex">
+                                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="@GetUpdateModalId(u)">
+                                Send
+                                </button>
+                                <SendDSRReminder Attendance="@u" OnAttendanceUpdated="SearchAttendanceByDateAsync" />
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No attendance found.</p>
+}
 
 @code {
+
+
+    private List<TodaysAttendanceResponse>? attendanceList;
+    private List<TodaysAttendanceResponse>? allAttendance;
+    private int index = 1;
+
+    private string? SearchName;
+
+    // New for date filter
+    private DateTime? FromDate;
+    private DateTime? ToDate;
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+
+        // Load ALL attendance records (new)
+        allAttendance = await attendanceClient.GetAllAttendanceAsync();
+        attendanceList = allAttendance;
+    }
+
+    private string GetUpdateModalId(TodaysAttendanceResponse attendance)
+    {
+        return $"#{UpdateAttendance.GetModalId(attendance)}";
+    }
+
+    // NEW: API-based Date + Name filter
+    private async Task SearchAttendanceByDateAsync()
+    {
+        if (string.IsNullOrWhiteSpace(SearchName) && FromDate is null && ToDate is null)
+        {
+            attendanceList = await attendanceClient.GetAllAttendanceAsync();
+        }
+        else
+        {
+            attendanceList = await attendanceClient.SearchAttendanceWithFiltersAsync(
+            SearchName,
+            FromDate,
+            ToDate
+            );
+        }
+    }
 
 }

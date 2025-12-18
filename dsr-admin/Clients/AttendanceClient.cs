@@ -45,28 +45,38 @@ public class AttendanceClient
                ?? new List<TodaysAttendanceResponse>();
     }
 
-        // New method to search attendance with filters
-        public async Task<List<TodaysAttendanceResponse>> SearchAttendanceWithFiltersAsync(
-        string? name = null,
-        DateTime? fromDate = null,
-        DateTime? toDate = null)
-            {
-                var query = new List<string>();
+    // New method to search attendance with filters
+    public async Task<List<TodaysAttendanceResponse>> SearchAttendanceWithFiltersAsync(
+    string? name = null,
+    DateTime? fromDate = null,
+    DateTime? toDate = null)
+    {
+        var query = new List<string>();
 
-                if (!string.IsNullOrWhiteSpace(name))
-                    query.Add($"name={Uri.EscapeDataString(name)}");
+        if (!string.IsNullOrWhiteSpace(name))
+            query.Add($"name={Uri.EscapeDataString(name)}");
 
-                if (fromDate.HasValue)
-                    query.Add($"fromDate={fromDate:yyyy-MM-dd}");
+        if (fromDate.HasValue)
+            query.Add($"fromDate={fromDate:yyyy-MM-dd}");
 
-                if (toDate.HasValue)
-                    query.Add($"toDate={toDate:yyyy-MM-dd}");
+        if (toDate.HasValue)
+            query.Add($"toDate={toDate:yyyy-MM-dd}");
 
-                var url = "attandanceinfo/all/search";
-                if (query.Any()) url += "?" + string.Join("&", query);
+        var url = "attandanceinfo/all/search";
+        if (query.Any()) url += "?" + string.Join("&", query);
 
-                return await _http.GetFromJsonAsync<List<TodaysAttendanceResponse>>(url)
-                    ?? new();
-            }
+        return await _http.GetFromJsonAsync<List<TodaysAttendanceResponse>>(url)
+            ?? new();
+    }
+
+    public async Task SendDSRReminderAsync(TodaysAttendanceResponse model)
+    {
+        var attendanceinfo = new AttendanceInfo
+        {
+            Id = model.Id,
+            AttandanceDate = model.AttandanceDate
+        };
+        await _http.PutAsJsonAsync($"attandanceinfo/dsrreminder", attendanceinfo);
+    }
 
 }

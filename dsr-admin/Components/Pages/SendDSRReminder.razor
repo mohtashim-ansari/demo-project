@@ -1,5 +1,4 @@
-﻿@using dsr_admin.Models
-@inherits BaseSecureComponent
+﻿@inherits BaseSecureComponent
 @inject AttendanceClient attendanceClient
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
@@ -17,8 +16,8 @@
                     Cancel
                 </button>
 
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="SaveAttendanceAsync">
-                    Update
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="SendDSRReminderAsync">
+                    Send
                 </button>
             </div>
 
@@ -38,13 +37,13 @@
 
     protected override void OnParametersSet()
     {
-        if (Attendance?.IsPresent == true)
+        if (Attendance?.IsDSRSent == true)
         {
-            title = $"Mark {Attendance?.FirstName} as absent?";
+            title = $"{Attendance?.FirstName} already has sent DSR?";
         }
         else
         {
-            title = $"Mark {Attendance?.FirstName} as present?";
+            title = $"Send DSR reminder to {Attendance?.FirstName}?";
         }
     }
 
@@ -54,11 +53,10 @@
     }
 
 
-    private async Task SaveAttendanceAsync()
+    private async Task SendDSRReminderAsync()
     {
-        await attendanceClient.UpdateAttendanceAsync(Attendance!);
+        await attendanceClient.SendDSRReminderAsync(Attendance!);
         await OnAttendanceUpdated.InvokeAsync();
         StateHasChanged();
     }
-
 }

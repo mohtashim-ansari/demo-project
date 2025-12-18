@@ -141,7 +141,8 @@ public static class AttandanceInfoEndpoints
                         u.Email,
                         u.Mobile,
                         a.AttandanceDate,
-                        a.IsPresent
+                        a.IsPresent,
+                        a.IsDSRSent
                     }
                 )
                 .OrderByDescending(x => x.AttandanceDate)
@@ -173,7 +174,8 @@ public static class AttandanceInfoEndpoints
                         u.Email,
                         u.Mobile,
                         a.AttandanceDate,
-                        a.IsPresent
+                        a.IsPresent,
+                        a.IsDSRSent
                     });
 
             if (!string.IsNullOrWhiteSpace(name))
@@ -193,6 +195,25 @@ public static class AttandanceInfoEndpoints
             );
         });
 
+        group.MapPut("/dsrreminder", async (UpdateAttendanceDto dto, AppDbContext dbContext) =>
+        {
+            var attendance = await dbContext.AttandanceInfos.FindAsync(dto.Id);
+            if (attendance is null) return Results.NotFound();
+
+            var user = await dbContext.UsersInfos.FindAsync(attendance.UserId);
+            if (user is null) return Results.NotFound();
+
+            // Here, you would typically send the DSR reminder message to the user.
+            // Your messaging logic goes here.
+
+            // For demonstration, we just toggle the IsDSRSent flag.
+            attendance.IsDSRSent = attendance.IsDSRSent ? false : true; // Toggle IsDSRSent
+            attendance.UpdatedBy = 1;
+            attendance.UpdatedOn = DateTime.Now;
+            await dbContext.SaveChangesAsync();
+
+            return Results.Ok(attendance);
+        });
 
         return group;
     }
