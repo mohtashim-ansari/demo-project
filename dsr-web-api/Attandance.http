@@ -54,3 +54,21 @@ DELETE {{host}}/attandanceinfo/11
 x-api-key: {{apikey}}
 
 ###
+
+# UPDATE ATTENDANCE (PUT) 
+PUT {{host}}/attandanceinfo/update
+Content-Type: application/json
+x-api-key: {{apikey}}
+
+{
+    "id": 1014,
+    "userId": 0,
+    "attandanceDate": "2025-12-17T09:30:00",
+    "isPresent": false,
+    "isDSRSent": false,
+    "isDeleted": false,
+    "createdBy": 0,
+    "createdOn": null,
+    "updatedBy": null,
+    "updatedOn": null
+}

@@ -21,7 +21,7 @@ public class DefaultUserMiddleware
         {
             var defaultUser = new UsersInfo
             {
-                FirtName = "Mohtashim",
+                FirstName = "Mohtashim",
                 LastName = "Ansari",
                 UserName = "admin",
                 Email = "admin@example.com",

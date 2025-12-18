@@ -23,7 +23,7 @@ Content-Type: application/json
 x-api-key: {{apikey}}
 
 {
-    "firtName": "Shadab",
+    "firstName": "Shadab",
     "lastName": "Ansari",
     "email": "Shadab@example.com",
     "mobile": "9876543210",
@@ -41,7 +41,7 @@ x-api-key: {{apikey}}
 
 {
     "id": 2,
-    "firtName": "Mohammad ",
+    "firstName": "Mohammad ",
     "lastName": "Ansari",
     "email": "mohtashim535@example.com",
     "mobile": "9075903590",

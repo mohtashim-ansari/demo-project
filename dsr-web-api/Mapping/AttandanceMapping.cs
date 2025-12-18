@@ -23,13 +23,13 @@ public static class AttandanceInfoMapping
     }
 
     // Convert UpdateAttandaceDto → AttandanceInfo entity
-    public static AttandanceInfo ToEntity(this UpdateAttandaceDto dto, int id, AttandanceInfo existing)
+    public static AttandanceInfo ToEntity(this UpdateAttendanceDto dto, int id, AttandanceInfo existing)
     {
         return new AttandanceInfo()
         {
             Id = id,
             UserId = dto.UserId,
-            AttandanceDate = dto.AttandanceDate,
+            AttandanceDate = dto.AttendanceDate,
             IsPresent = dto.IsPresent,
             IsDSRSent = dto.IsDSRSent,
             IsDeleted = dto.IsDeleted,

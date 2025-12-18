@@ -6,7 +6,7 @@ namespace dsr_admin.Dtos;
 public record CreateUsersInfoDto
 {
     [Required(ErrorMessage = "First name is required.")]
-    public string FirtName { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Last name is required.")]
     public string LastName { get; set; } = string.Empty;

@@ -5,7 +5,7 @@ namespace dsr_web_api.Dtos;
 public record class CreateUsersInfoDto
 (
     [Required] int Id,
-    [Required] string? FirtName,
+    [Required] string? FirstName,
     [Required] string? LastName,
     [Required] string? Email,
     [Required] string? Mobile,

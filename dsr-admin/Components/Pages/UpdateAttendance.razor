@@ -1,0 +1,65 @@
+﻿@using dsr_admin.Models
+@inherits BaseSecureComponent
+@inject AttendanceClient attendanceClient
+@inject NavigationManager NavigationManager
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<!-- Modal -->
+<div class="modal fade" id="@GetModalId(Attendance)" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">@title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="SaveAttendanceAsync">
+                    Update
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    private string title = string.Empty;
+
+    [Parameter]
+    public TodaysAttendanceResponse? Attendance { get; set; }
+
+    [Parameter]
+    public EventCallback OnAttendanceUpdated { get; set; }
+
+
+    protected override void OnParametersSet()
+    {
+        if (Attendance?.IsPresent == true)
+        {
+            title = $"Mark {Attendance?.FirstName} as absent?";
+        }
+        else
+        {
+            title = $"Mark {Attendance?.FirstName} as present?";
+        }
+    }
+
+    public static string GetModalId(TodaysAttendanceResponse? attendance)
+    {
+        return $"update-attendance-{attendance?.Id}";
+    }
+
+
+    private async Task SaveAttendanceAsync()
+    {
+        await attendanceClient.UpdateAttendanceAsync(Attendance!);
+        await OnAttendanceUpdated.InvokeAsync();
+        StateHasChanged();
+    }
+
+}

@@ -11,7 +11,7 @@ public static class UsersInfoMapping
     {
         return new UsersInfo()
         {
-            FirtName = usersDto.FirtName!,
+            FirstName = usersDto.FirstName!,
             LastName = usersDto.LastName!,
             Email = usersDto.Email!,
             Mobile = usersDto.Mobile!,
@@ -37,7 +37,7 @@ public static class UsersInfoMapping
         return new UsersInfo()
         {
             Id = id,
-            FirtName = usersDto.FirtName!,
+            FirstName = usersDto.FirstName!,
             LastName = usersDto.LastName!,
             Email = usersDto.Email!,
             Mobile = usersDto.Mobile!,
@@ -60,7 +60,7 @@ public static class UsersInfoMapping
     {
         return new UsersInfoDetailsDto(
             users.Id,
-            users.FirtName,
+            users.FirstName,
             users.LastName,
             users.Email,
             users.Mobile,

@@ -1,5 +1,5 @@
 ﻿@page "/attendance"
-@inject TodaysClient todaysClient
+@inject AttendanceClient attendanceClient
 @inherits BaseSecureComponent
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
@@ -30,7 +30,7 @@ else
             {
                 <tr>
                     <td>@(index++)</td>
-                    <td>@u.FirtName</td>
+                    <td>@u.FirstName</td>
                     <td>@u.LastName</td>
                     <td>@u.Email</td>
                     <td>@u.Mobile</td>
@@ -57,7 +57,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         base.OnInitializedAsync();
-        users = await todaysClient.GetTodaysAttendanceAsync();
+        users = await attendanceClient.GetTodaysAttendanceAsync();
         loading = false;
     }
 }

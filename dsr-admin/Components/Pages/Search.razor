@@ -1,8 +1,153 @@
 ﻿@page "/search"
+@using dsr_admin.Models
 @inherits BaseSecureComponent
+@inject AttendanceClient attendanceClient
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
-<h3>Search</h3>
+
+<h3>Search Attendance</h3>
+<SearchFilters Attendances="@allAttendance" @bind-SearchName="@SearchName" @bind-FromDate="FromDate"
+    @bind-ToDate="ToDate" OnSearch="SearchAttendanceByDateAsync">
+</SearchFilters>
+
+@* <div class="row g-3 mb-3 align-items-end">
+
+    <!-- Search by Name -->
+    <div class="col-md-4">
+        <label class="form-label fw-semibold">Search</label>
+        <input type="text" class="form-control" placeholder="Search by name" @bind="searchText" @bind:event="oninput" />
+    </div>
+
+    <!-- From Date -->
+    <div class="col-md-3">
+        <label class="form-label fw-semibold">From Date</label>
+        <input type="date" class="form-control" @bind="FromDate" />
+    </div>
+
+    <!-- To Date -->
+    <div class="col-md-3">
+        <label class="form-label fw-semibold">To Date</label>
+        <input type="date" class="form-control" @bind="ToDate" />
+    </div>
+
+    <!-- Search Button -->
+    <div class="col-md-2 d-grid">
+        <button class="btn btn-primary" @onclick="SearchAttendanceByDateAsync">
+            Search
+        </button>
+    </div>
+
+</div> *@
+
+@if (attendanceList != null && attendanceList.Any())
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Attendance Date</th>
+                <th>Present</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in attendanceList)
+            {
+                <tr>
+                    <td>@(index++)</td>
+                    <td>@u.FirstName</td>
+                    <td>@u.LastName</td>
+                    <td>@u.Email</td>
+                    <td>@u.Mobile</td>
+                    <td>@u.AttandanceDate.DateToString()</td>
+                    <td>
+                        @if (u.IsPresent)
+                        {
+                            <span class="badge text-bg-success">Present</span>
+                        }
+                        else
+                        {
+                            <span class="badge text-bg-danger">Absent</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="d-flex">
+                            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="@GetUpdateModalId(u)">
+                                @(u.IsPresent ? "Mark Absent" : "Mark Present")
+                            </button>
+                            <UpdateAttendance Attendance="@u" OnAttendanceUpdated="SearchAttendanceByDateAsync" />
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No attendance found.</p>
+}
 
 @code {
+    private List<TodaysAttendanceResponse>? attendanceList;
+    private List<TodaysAttendanceResponse>? allAttendance;
+    private int index = 1;
 
+    private string? SearchName;
+
+    // New for date filter
+    private DateTime? FromDate;
+    private DateTime? ToDate;
+
+    @* // Reload after update (existing logic)
+    private async Task ReloadAttendance()
+    {
+        if (string.IsNullOrWhiteSpace(SearchName) && FromDate is null && ToDate is null)
+        {
+            attendanceList = await attendanceClient.GetAllAttendanceAsync();
+        }
+        else
+        {
+            attendanceList = await attendanceClient.SearchAttendanceWithFiltersAsync(
+            SearchName,
+            FromDate,
+            ToDate
+            );
+        }
+        StateHasChanged();
+    } *@
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+
+        // Load ALL attendance records (new)
+        allAttendance = await attendanceClient.GetAllAttendanceAsync();
+        attendanceList = allAttendance;
+    }    
+
+    private string GetUpdateModalId(TodaysAttendanceResponse attendance)
+    {
+        return $"#{UpdateAttendance.GetModalId(attendance)}";
+    }
+
+    // NEW: API-based Date + Name filter
+    private async Task SearchAttendanceByDateAsync()
+    {
+        if (string.IsNullOrWhiteSpace(SearchName) && FromDate is null && ToDate is null)
+        {
+            attendanceList = await attendanceClient.GetAllAttendanceAsync();
+        }
+        else
+        {
+            attendanceList = await attendanceClient.SearchAttendanceWithFiltersAsync(
+            SearchName,
+            FromDate,
+            ToDate
+            );
+        }
+    }
 }

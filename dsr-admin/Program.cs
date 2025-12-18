@@ -10,19 +10,22 @@ builder.Services.AddRazorComponents()
 
 var config = builder.Configuration;
 
+// ----------------------------------------
+// Session
+// ----------------------------------------
 builder.Services.AddScoped<UserSession>();
 
 // ----------------------------------------
-// ✔ Register TodaysClient
+// ✔ AttendanceClient (FIXED)
 // ----------------------------------------
-builder.Services.AddHttpClient<TodaysClient>(client =>
+builder.Services.AddHttpClient<AttendanceClient>(client =>
 {
     client.BaseAddress = new Uri(config["DSRApiUrl"]!);
     client.DefaultRequestHeaders.Add("X-Api-Key", config["ApiKey"]!);
 });
 
 // ----------------------------------------
-// ✔ Register AccountClient
+// ✔ AccountClient
 // ----------------------------------------
 builder.Services.AddHttpClient<AccountClient>(client =>
 {
@@ -31,14 +34,13 @@ builder.Services.AddHttpClient<AccountClient>(client =>
 });
 
 // ----------------------------------------
-// ✔ Register RegisterUser
+// ✔ RegisterUser
 // ----------------------------------------
 builder.Services.AddHttpClient<RegisterUser>(client =>
 {
     client.BaseAddress = new Uri(config["DSRApiUrl"]!);
     client.DefaultRequestHeaders.Add("X-Api-Key", config["ApiKey"]!);
 });
-
 
 // ----------------------------------------
 // Build app

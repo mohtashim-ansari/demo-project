@@ -94,7 +94,7 @@ public static class UsersInfoEndpoints
             .Select(u => new
             {
                 u.Id,
-                u.FirtName,
+                u.FirstName,
                 u.LastName,
                 u.Email,
                 u.Mobile
