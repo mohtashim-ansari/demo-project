@@ -25,6 +25,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Add PasswordHasher
 builder.Services.AddSingleton<PasswordService>();
+// Add Email Service
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -32,17 +35,18 @@ var app = builder.Build();
 app.UseApiKey();// 🛑 API KEY CHECK FIRST
 app.UseDefaultUser();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 
+app.UseHttpsRedirection();
 
 // Map API Endpoint
 app.MapUsersInfoEndpoints();

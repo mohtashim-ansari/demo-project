@@ -55,8 +55,16 @@
 
     private async Task SendDSRReminderAsync()
     {
-        await attendanceClient.SendDSRReminderAsync(Attendance!);
-        await OnAttendanceUpdated.InvokeAsync();
-        StateHasChanged();
+        try
+        {
+            await attendanceClient.SendDSRReminderAsync(Attendance!);
+            await OnAttendanceUpdated.InvokeAsync(); // Refresh list
+            Console.WriteLine($"DSR reminder sent for {Attendance?.FirstName}");
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Failed to send DSR reminder: " + ex.Message);
+        }
     }
 }

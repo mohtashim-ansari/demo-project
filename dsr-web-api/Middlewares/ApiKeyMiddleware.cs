@@ -12,6 +12,12 @@ public class ApiKeyMiddleware
 
     public async Task InvokeAsync(HttpContext context, IConfiguration config)
     {
+        if (context.Request.Path.StartsWithSegments("/swagger"))
+        {
+            await _next(context);
+            return;
+        }
+
         // Get API Key from appsettings.json
         string? expectedApiKey = config["ApiKey"];
 

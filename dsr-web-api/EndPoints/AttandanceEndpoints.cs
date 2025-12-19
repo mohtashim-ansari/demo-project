@@ -2,6 +2,7 @@ using dsr_web_api.Data;
 using dsr_web_api.Dtos;
 using dsr_web_api.Mapping;
 using dsr_web_api.Models;
+using dsr_web_api.Services;
 using Microsoft.EntityFrameworkCore;
 
 public static class AttandanceInfoEndpoints
@@ -194,8 +195,7 @@ public static class AttandanceInfoEndpoints
                     .ToListAsync()
             );
         });
-
-        group.MapPut("/dsrreminder", async (UpdateAttendanceDto dto, AppDbContext dbContext) =>
+        group.MapPut("/dsrreminder", async (UpdateAttendanceDto dto, AppDbContext dbContext, EmailService emailService) =>
         {
             var attendance = await dbContext.AttandanceInfos.FindAsync(dto.Id);
             if (attendance is null) return Results.NotFound();
@@ -203,14 +203,27 @@ public static class AttandanceInfoEndpoints
             var user = await dbContext.UsersInfos.FindAsync(attendance.UserId);
             if (user is null) return Results.NotFound();
 
-            // Here, you would typically send the DSR reminder message to the user.
-            // Your messaging logic goes here.
-
-            // For demonstration, we just toggle the IsDSRSent flag.
-            attendance.IsDSRSent = attendance.IsDSRSent ? false : true; // Toggle IsDSRSent
-            attendance.UpdatedBy = 1;
-            attendance.UpdatedOn = DateTime.Now;
-            await dbContext.SaveChangesAsync();
+            if (attendance.IsPresent && !attendance.IsDSRSent)
+            {
+                try
+                {
+                    emailService.Send(
+                        user.Email,
+                        "DSR Pending Reminder",
+                        $"""
+                <p>Hi {user.FirstName},</p>
+                <p>You are marked <b>Present</b> today, but your <b>DSR has not been submitted</b>.</p>
+                <p>Please submit your DSR as soon as possible.</p>
+                """
+                    );
+                    Console.WriteLine($"DSR reminder sent to {user.Email}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to send email to {user.Email}");
+                    Console.WriteLine(ex.Message);
+                }
+            }          
 
             return Results.Ok(attendance);
         });

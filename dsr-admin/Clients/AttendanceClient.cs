@@ -76,7 +76,7 @@ public class AttendanceClient
             Id = model.Id,
             AttandanceDate = model.AttandanceDate
         };
+
         await _http.PutAsJsonAsync($"attandanceinfo/dsrreminder", attendanceinfo);
     }
-
 }
