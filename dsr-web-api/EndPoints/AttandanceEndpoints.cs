@@ -100,7 +100,8 @@ public static class AttandanceInfoEndpoints
                     u.Email,
                     u.Mobile,
                     a.AttandanceDate,
-                    a.IsPresent
+                    a.IsPresent,
+                    a.IsDSRSent
                 }
             )
             .Where(x => x.AttandanceDate.Date == DateTime.Now.Date)
@@ -225,6 +226,18 @@ public static class AttandanceInfoEndpoints
                 }
             }          
 
+            return Results.Ok(attendance);
+        });
+
+        group.MapPut("/dsrsent", async (UpdateAttendanceDto dto, AppDbContext dbContext) =>
+        {
+            var attendance = await dbContext.AttandanceInfos.FindAsync(dto.Id);
+            if (attendance is null) return Results.NotFound();
+
+            attendance.IsDSRSent = true;
+            attendance.UpdatedBy = attendance.UserId;
+            attendance.UpdatedOn = DateTime.Now;
+            await dbContext.SaveChangesAsync();
             return Results.Ok(attendance);
         });
 
